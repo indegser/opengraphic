@@ -21,7 +21,7 @@ export default async function handler(
   await page.goto(`http://localhost:3000/?url=${url}&text=${text}`);
   const file = await page.screenshot({ type: 'jpeg', });
   
-  // await browser.close();
+  await browser.close();
 
   res.setHeader('Content-Type', `image/jpeg`);
   res.setHeader('Cache-Control', `public, immutable, no-transform, s-maxage=31536000, max-age=31536000`);
