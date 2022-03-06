@@ -1,26 +1,40 @@
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { globalStyles } from "../src/globalStyles";
 import { styled } from "../src/stitches.config";
 
 function Page() {
-  const {
-    query: { url, text = "Hello World" },
-  } = useRouter();
+  globalStyles();
+
+  const [isReady, setIsReady] = useState(false);
+  const { query } = useRouter();
+  const url = query.url?.toString();
+  const text = query.text?.toString();
+
+  useEffect(() => {
+    if (!url) return;
+
+    const img = new Image();
+    img.onload = () => {
+      setIsReady(true);
+    };
+
+    img.src = url?.toString();
+  }, [url]);
+
+  if (!url) return null;
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        position: "fixed",
-        top: 0,
-        left: 0,
-      }}
-    >
-      <h1 style={{ position: "absolute" }}>{text}</h1>
-      <Background src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/ipad-air-select-wifi-blue-202009_FMT_WHH?wid=1000&hei=1000&fmt=jpeg&qlt=95&.v=1599672435000" />
-    </div>
+    <Container data-ready={isReady}>
+      <Background src={url} />
+      <Headline>{text ?? "Rendered server-side"}</Headline>
+    </Container>
   );
 }
+
+const Container = styled("div", {
+  position: "relative",
+});
 
 const Background = styled("img", {
   width: "100vw",
@@ -29,6 +43,11 @@ const Background = styled("img", {
   objectPosition: "center",
   position: "fixed",
   zIndex: -1,
+});
+
+const Headline = styled("h1", {
+  fontSize: "4vw",
+  margin: 0,
 });
 
 export default Page;
