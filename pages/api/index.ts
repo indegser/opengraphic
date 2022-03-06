@@ -12,7 +12,7 @@ export default async function handler(
 ) {
   const { url, text } = req.query;
 
-  const browser = await webkit.launch({ headless: false });
+  const browser = await webkit.launch();
   const page = await browser.newPage();
   await page.setViewportSize({
     width: 1280,
